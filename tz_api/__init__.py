@@ -32,11 +32,14 @@ def handler(event, context):
 
     http = urllib3.PoolManager()
 
+    print(f"location: {location}")
     latitude, longitude = get_coordinates(http, location)
     if not latitude or not longitude:
         print("bad latitude and longitude")
         return nope_response
 
+    print(f"latitude {latitude}")
+    print(f"longitude {longitude}")
     r = http.request(
         "GET",
         "https://maps.googleapis.com/maps/api/timezone/xml",
@@ -63,7 +66,7 @@ def get_coordinates(http, location):
         "GET",
         "https://maps.googleapis.com/maps/api/geocode/json",
         fields={
-            "address": "Asheboro, NC",
+            "address": location,
             "key": API_KEY
         }
     )
