@@ -49,11 +49,12 @@ def handler(event, context):
             "key": API_KEY
         }
     )
-
+    body = r.data.decode()
+    print(body)
     return {
         "statusCode": r.status,
         "headers": {"content-type": "application/xml"},
-        "body": r.data.decode()
+        "body": body
     }
 
 
