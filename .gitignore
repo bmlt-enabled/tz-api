@@ -1,0 +1,8 @@
+.idea
+lambda
+lambda.zip
+settings.auto.tfvars
+venv
+.terraform
+terraform.tfstate
+terraform.tfstate.backup
