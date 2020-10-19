@@ -15,8 +15,6 @@ API_KEY = os.environ.get("GOOGLE_API_KEY")
 
 
 def handler(event, context):
-    print(str(API_KEY))
-    print(str(event))
     path = event.get("path")
     if not path.startswith("/bmlt"):
         print("bad path")
