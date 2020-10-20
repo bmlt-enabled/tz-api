@@ -7,7 +7,7 @@ import urllib3
 nope_response = {
     "statusCode": 403,
     "headers": {"content-type": "application/xml"},
-    "body": json.dumps("<blah><status>NOPE</status></blah>")
+    "body": "<blah><status>NOPE</status></blah>"
 }
 
 
