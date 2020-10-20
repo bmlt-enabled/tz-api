@@ -50,7 +50,7 @@ def handler(event, context):
         }
     )
     body = r.data.decode()
-    print(body)
+    # print(body)
     return {
         "statusCode": r.status,
         "headers": {"content-type": "application/xml"},

@@ -95,6 +95,10 @@ resource "aws_iam_role_policy_attachment" "vpc" {
 resource "aws_api_gateway_rest_api" "tz_api" {
   name        = "tz_api"
   description = "tz_api"
+
+  endpoint_configuration {
+    types = ["REGIONAL"]
+  }
 }
 
 resource "aws_api_gateway_resource" "proxy" {
@@ -196,14 +200,18 @@ resource "aws_route53_record" "tz" {
 
   alias {
     evaluate_target_health = true
-    name                   = aws_api_gateway_domain_name.tz.cloudfront_domain_name
-    zone_id                = aws_api_gateway_domain_name.tz.cloudfront_zone_id
+    name                   = aws_api_gateway_domain_name.tz.regional_domain_name
+    zone_id                = aws_api_gateway_domain_name.tz.regional_zone_id
   }
 }
 
 resource "aws_api_gateway_domain_name" "tz" {
-  certificate_arn = aws_acm_certificate_validation.tz.certificate_arn
-  domain_name     = aws_acm_certificate.tz.domain_name
+  regional_certificate_arn = aws_acm_certificate_validation.tz.certificate_arn
+  domain_name              = aws_acm_certificate.tz.domain_name
+
+  endpoint_configuration {
+    types = ["REGIONAL"]
+  }
 }
 
 resource "aws_api_gateway_base_path_mapping" "tz" {
