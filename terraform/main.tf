@@ -5,27 +5,16 @@ provider "aws" {
 
 terraform {
   backend "s3" {
-    bucket  = "tomato-terraform-state-mvana"
-    key     = "tz-api.tfstate"
-    region  = "us-east-1"
-    profile = "mvana"
+    bucket         = "mvana-account-terraform"
+    dynamodb_table = "mvana-account-terraform"
+    key            = "tz-api.tfstate"
+    region         = "us-east-1"
+    profile        = "mvana"
   }
 }
 
 variable "google_api_key" {
   type = string
-}
-
-resource "aws_security_group" "tz_api" {
-  name   = "tz_api"
-  vpc_id = "vpc-0b06abcc49c87c31f"
-
-  egress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
 }
 
 resource "aws_lambda_function" "tz_api" {
@@ -40,11 +29,6 @@ resource "aws_lambda_function" "tz_api" {
     variables = {
       GOOGLE_API_KEY = var.google_api_key
     }
-  }
-
-  vpc_config {
-    security_group_ids = [aws_security_group.tz_api.id]
-    subnet_ids         = ["subnet-08cea9c9b1562577a", "subnet-0610d9d763aa86fad"]
   }
 }
 
@@ -119,7 +103,7 @@ resource "aws_api_gateway_integration" "lambda" {
   resource_id = aws_api_gateway_method.proxy.resource_id
   http_method = aws_api_gateway_method.proxy.http_method
 
-  integration_http_method = "GET"
+  integration_http_method = "POST"
   type                    = "AWS_PROXY"
   uri                     = aws_lambda_function.tz_api.invoke_arn
 }
