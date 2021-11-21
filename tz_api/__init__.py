@@ -6,8 +6,8 @@ import urllib3
 
 nope_response = {
     "statusCode": 403,
-    "headers": {"content-type": "application/xml"},
-    "body": "<blah><status>NOPE</status></blah>"
+    "headers": {"content-type": "application/json"},
+    "body": json.dumps("NOPE")
 }
 
 
@@ -17,7 +17,7 @@ API_KEY = os.environ.get("GOOGLE_API_KEY")
 def handler(event, context):
     path = event.get("path")
     if not path.startswith("/bmlt"):
-        print("bad path")
+        print(f"bad path {path}")
         return nope_response
 
     params = event.get("queryStringParameters")
@@ -42,19 +42,26 @@ def handler(event, context):
     print(f"longitude {longitude}")
     r = http.request(
         "GET",
-        "https://maps.googleapis.com/maps/api/timezone/xml",
+        "https://maps.googleapis.com/maps/api/timezone/json",
         fields={
             "location": f"{latitude},{longitude}",
             "timestamp": str(int(time.time())),
             "key": API_KEY
         }
     )
-    body = r.data.decode()
+
+    body = json.loads(r.data.decode())
+
     # print(body)
     return {
         "statusCode": r.status,
-        "headers": {"content-type": "application/xml"},
-        "body": body
+        "headers": {"content-type": "application/json"},
+        "body": json.dumps({
+            "dstOffset": body.get("dstOffset"),
+            "rawOffset": body.get("rawOffset"),
+            "timeZoneId": body.get("timeZoneId"),
+            "timeZoneName": body.get("timeZoneName")
+        })
     }
 
 
