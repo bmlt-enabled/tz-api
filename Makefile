@@ -6,6 +6,7 @@ zip: clean lambda.zip
 
 deploy:
 	cd terraform && terraform apply
+
 clean:
 	rm -rf lambda lambda.zip
 
