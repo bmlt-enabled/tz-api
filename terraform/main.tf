@@ -5,10 +5,11 @@ provider "aws" {
 
 terraform {
   backend "s3" {
-    bucket  = "tomato-terraform-state-mvana"
-    key     = "tz-api.tfstate"
-    region  = "us-east-1"
-    profile = "mvana"
+    bucket         = "mvana-account-terraform"
+    dynamodb_table = "mvana-account-terraform"
+    key            = "tz-api.tfstate"
+    region         = "us-east-1"
+    profile        = "mvana"
   }
 }
 
@@ -18,7 +19,7 @@ variable "google_api_key" {
 
 resource "aws_security_group" "tz_api" {
   name   = "tz_api"
-  vpc_id = "vpc-0b06abcc49c87c31f"
+  vpc_id = "vpc-0dfcb118ca0c0e124"
 
   egress {
     from_port   = 443
@@ -42,10 +43,10 @@ resource "aws_lambda_function" "tz_api" {
     }
   }
 
-  vpc_config {
-    security_group_ids = [aws_security_group.tz_api.id]
-    subnet_ids         = ["subnet-08cea9c9b1562577a", "subnet-0610d9d763aa86fad"]
-  }
+  #  vpc_config {
+  #    security_group_ids = [aws_security_group.tz_api.id]
+  #    subnet_ids         = ["subnet-08cea9c9b1562577a", "subnet-0610d9d763aa86fad"]
+  #  }
 }
 
 data "aws_iam_policy_document" "assume_role" {
@@ -163,11 +164,11 @@ resource "aws_lambda_permission" "apigw" {
 }
 
 data "aws_route53_zone" "tz" {
-  name = "tz.bmltenabled.org."
+  name = "metrics.bmltenabled.org" #"tz.bmltenabled.org."
 }
 
 resource "aws_acm_certificate" "tz" {
-  domain_name       = "api.tz.bmltenabled.org"
+  domain_name       = "tz.metrics.bmltenabled.org" #"api.tz.bmltenabled.org"
   validation_method = "DNS"
 }
 

@@ -1,5 +1,5 @@
 lambda.zip:
-	pip install --target ./lambda .
+	python3 -m pip install --target ./lambda .
 	cd lambda && zip -r9 ../lambda.zip .
 
 zip: clean lambda.zip
