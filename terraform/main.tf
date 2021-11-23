@@ -147,11 +147,11 @@ resource "aws_lambda_permission" "apigw" {
 }
 
 data "aws_route53_zone" "tz" {
-  name = "tz.bmltenabled.org."
+  name = "api.bmltenabled.org."
 }
 
 resource "aws_acm_certificate" "tz" {
-  domain_name       = "api.tz.bmltenabled.org"
+  domain_name       = "tz.api.bmltenabled.org"
   validation_method = "DNS"
 }
 
