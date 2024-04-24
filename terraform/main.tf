@@ -22,7 +22,7 @@ resource "aws_lambda_function" "tz_api" {
   filename         = "../lambda.zip"
   source_code_hash = filebase64sha256("../lambda.zip")
   handler          = "tz_api.handler"
-  runtime          = "python3.9"
+  runtime          = "python3.11"
   role             = aws_iam_role.tz_api.arn
 
   environment {
